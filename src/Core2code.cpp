@@ -12,10 +12,6 @@
 
 //Core2: this task serves the Webpage and handles the GPS NMEAs
 
-// by JG wird bei mir nicht gebraucht
-//AsyncUDP udpRoof;
-
-
 
 #ifdef USE_BLUETOOTH
 BluetoothSerial SerialBT;
