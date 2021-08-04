@@ -56,8 +56,8 @@ extern WiFiClient tcpNMEAclient;
 #define ACTION_DELETE_GCP      9
 
 
-extern void WiFi_Start_STA();
-extern void WiFi_Start_AP();
+//extern void WiFi_Start_STA();
+extern void WiFi_Start();
 extern void WiFi_Traffic();
 extern void UDPReceiveNtrip();
 

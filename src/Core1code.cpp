@@ -13,7 +13,7 @@ unsigned long lTime =0;
 void Core1code( void * pvParameters )
 {
 
-  DBG("\nTask1 running on core ");
+  DBG("\nTask1 (NTRIP-Client) running on core ");
   DBG((int)xPortGetCoreID(),1);
 
 
@@ -25,7 +25,7 @@ void Core1code( void * pvParameters )
   // by JG: zusaetzliche Abfrage auf "wifi_connect", da bis zum Aufbau der WiFi-Verbindung sonst auf uninitialisertes " ntripCl" zugegriffen wird
   while ((my_WiFi_Mode != WIFI_STA) || (!wifi_connected))
   {
-     DBG("Waiting for WiFi Access\n");
+     DBG("NTRIP Client Waiting for WiFi Access\n");
      delay(1000);
    }
 
@@ -83,15 +83,13 @@ void Core1code( void * pvParameters )
     my_WiFi_Mode = 0;
     wifi_connected = false;
     DBG("WiFi offline, trying to reconnect\n");
-    WiFi_Start_STA();
+    WiFi_Start();
     if (my_WiFi_Mode == WIFI_STA) 
     {
      restart = 0;
     }  
   }
   
-   
-
  } // End of (for ever)
 } // End of core1code
 

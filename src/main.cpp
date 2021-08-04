@@ -335,10 +335,10 @@ void setup()
 
   //------------------------------------------------------------------------------------------------------------  
   //create a task that will be executed in the Core1code() function, with priority 1 and executed on core 0
-  xTaskCreatePinnedToCore(Core1code, "Core1", 10000, NULL, 3, &Core1, 0); // test Priority 2
+  xTaskCreatePinnedToCore(Core1code, "Core1", 10000, NULL, 2, &Core1, 0); // test Priority 2
   delay(500); 
   //create a task that will be executed in the Core2code() function, with priority 1 and executed on core 1
-  xTaskCreatePinnedToCore(Core2code, "Core2", 10000, NULL, 0, &Core2, 1); 
+  xTaskCreatePinnedToCore(Core2code, "Core2", 10000, NULL, 1, &Core2, 1); 
   delay(500); 
   //------------------------------------------------------------------------------------------------------------
 

@@ -179,11 +179,11 @@ void Core2code( void * pvParameters )
  {  // wait for eeprom data
   delay(100);
  }
- DBG("WiFi_Start_STA in Task2");
- 
+
+ DBG("\nWiFi_Start in Task2");
  if (!wifi_connected)
  {
-  WiFi_Start_STA();
+  WiFi_Start();
   delay(100);
  }
 
@@ -195,7 +195,7 @@ void Core2code( void * pvParameters )
  #ifdef USE_BLUETOOTH
      if(!SerialBT.begin("NTRIP"))
      {
-      DBG("\nAn error occurred initializing Bluetooth\n");
+      DBG("\nERROR:  Bluetooth init\n");
      }
      else
      {
@@ -211,7 +211,7 @@ void Core2code( void * pvParameters )
  #endif
 
 
- if (my_WiFi_Mode == 0) WiFi_Start_AP(); // if failed start AP
+ if (my_WiFi_Mode == 0) WiFi_Start();
 
  DBG("WiFi-Mode: ");
  DBG(my_WiFi_Mode,1);

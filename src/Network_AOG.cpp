@@ -514,12 +514,12 @@ void WiFi_Start_AP()
 }
 
 //---------------------------------------------------------------------
-void WiFi_Start_STA() 
+void WiFi_Start() 
 {
   unsigned long timeout;
+  //delay(100);
+  //WiFi.disconnect();
   delay(100);
-  WiFi.disconnect();
-  delay(500);
   WiFi.mode(WIFI_STA);   //  Workstation
   
   // für statische IP:
@@ -581,14 +581,15 @@ void WiFi_Start_STA()
   else 
   {
     //WiFi.mode(WIFI_OFF);
-    DBG("WLAN-Client-Connection failed\n");
+    DBG("\nWLAN-Client-Connection failed\n");
     
     //ESP.restart(); // by JG
     //wifi_connected = false;
 
-    DBG("..try to create local AP 'NTRIP'");
+    DBG("\n..try to create local AP 'NTRIP'");
     WiFi_Start_AP();
     wifi_connected = true;
+    delay(1000);
   }
   
 }
@@ -721,8 +722,8 @@ void make_HTML01() {
   strcat( HTML_String, "</head>");
   strcat( HTML_String, "<body bgcolor=\"#A2C482\">");
   strcat( HTML_String, "<font color=\"#000000\" face=\"VERDANA,ARIAL,HELVETICA\">");
- 
-  strcat( HTML_String, "<h1>NTRIP-Client ESP32</h1>");
+
+  strcat(HTML_String, "<h1>NTRIP and Ground-Control-Points</h1><hr>");
 
   //-----------------------------------------------------------------------------------------
   
@@ -730,7 +731,7 @@ void make_HTML01() {
   sprintf_P(TimeString, PSTR("%02d:%02d:%02d <br>"), gps.time.hour()+2, gps.time.minute(), gps.time.second()); // by JG
   //strcat( HTML_String, TimeString);
   //strcat( HTML_String, "</br>");
-  // by JG Ground-Control-Points ausgeben
+  // by JG Ground-Control-Points 
   strcat( HTML_String, "<h2>Ground-Control-Points:</h2>");
   strcat( HTML_String, "<form>");
   strcat( HTML_String, "<table>");
@@ -753,13 +754,13 @@ void make_HTML01() {
       strcat(HTML_String, "</br>");
 
   }
-  strcat( HTML_String, "<br><hr>");
+  strcat( HTML_String, "</br>");
 
   strcat( HTML_String, "<hr><h2>WiFi Network Client Access Data</h2>");
   strcat( HTML_String, "<form>");
-  strcat( HTML_String, "This NTRIP Client requires access to an Internet enabled Network!!<br><br>");
+  strcat( HTML_String, "NTRIP Client requires access to an Internet!<br><br>");
   strcat( HTML_String, "If access fails, an accesspoint will be created<br>");
-  strcat( HTML_String, "(NTRIP_Client_ESP_Net PW:passport)<br><br>");
+  strcat( HTML_String, "(NTRIP)<br><br>");
   strcat( HTML_String, "<table>");
   set_colgroup(150, 270, 150, 0, 0);
 
@@ -913,7 +914,7 @@ void make_HTML01() {
   }
   strcat( HTML_String, "<tr> <td colspan=\"3\">&nbsp;</td> </tr>");
   
-  for (int i = 0; i < 7; i++) 
+  for (int i = 2; i < 7; i++) 
   {
     strcat( HTML_String, "<tr>");
     if (i == 0) strcat( HTML_String, "<td><b>Baudrate</b></td>");
@@ -923,8 +924,8 @@ void make_HTML01() {
     strcat( HTML_String, "\" value=\"");
     strcati( HTML_String, i);
     strcat( HTML_String, "\"");
-    if ((NtripSettings.baudOut == 9600)   && i==0)strcat( HTML_String, " CHECKED");
-    if ((NtripSettings.baudOut == 14400)  && i==1)strcat( HTML_String, " CHECKED");
+    //if ((NtripSettings.baudOut == 9600)   && i==0)strcat( HTML_String, " CHECKED");
+    //if ((NtripSettings.baudOut == 14400)  && i==1)strcat( HTML_String, " CHECKED");
     if ((NtripSettings.baudOut == 19200)  && i==2)strcat( HTML_String, " CHECKED");
     if ((NtripSettings.baudOut == 38400)  && i==3)strcat( HTML_String, " CHECKED");
     if ((NtripSettings.baudOut == 57600)  && i==4)strcat( HTML_String, " CHECKED");
@@ -949,7 +950,7 @@ void make_HTML01() {
   strcat( HTML_String, "<tr>");
   strcat( HTML_String, "<h2>Fixed GGA or RMC Sentence of your Location:</h2>");
   strcat( HTML_String, "You can create your own from  <a href=\"https://www.nmeagen.org/\" target=\"_blank\">www.nmeagen.org</a><br><br>");
-  strcat( HTML_String, "<input type=\"text\" style= \"width:650px\" name=\"GGA_MY\" maxlength=\"100\" Value =\"");
+  strcat( HTML_String, "<input type=\"text\" style= \"width:480px\" name=\"GGA_MY\" maxlength=\"100\" Value =\"");
   strcat( HTML_String, NtripSettings.GGAsentence);
   strcat( HTML_String, "\"><br><br>");
   
