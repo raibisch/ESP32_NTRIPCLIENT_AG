@@ -1,0 +1,11 @@
+sudo killall rfcomm
+sudo rfcomm release 0
+sudo rfcomm bind 0 30:AE:A4:73:83:06
+
+
+If the command doesn’t work, probably you opened the serial monitor on arduino IDE.
+STEP 3: Try to communicate using read and write
+
+This step might be as daunting as the previous one. You may have screen package installed to your computer. Run the command below by opening another terminal tab
+
+sudo screen /dev/rfcomm0
