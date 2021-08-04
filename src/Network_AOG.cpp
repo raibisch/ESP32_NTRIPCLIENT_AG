@@ -35,9 +35,8 @@ char gcp_WG84_32N[13] = {"WGS84 UTM32N"};
 //---------------------------------------------------------------------
 
 //Accesspoint name and password:
-const char* ssid_ap     = "AGNTRIP";
+const char* ssid_ap     = "NTRIP";
 const char* password_ap = "";
-
 
 
 char HTML_String[7000];
@@ -68,7 +67,7 @@ String _accept = "*/*";
 
 WiFiClient client_page;
 WiFiClient ntripCl;
-AsyncUDP udpNtrip;
+//AsyncUDP udpNtrip;
 
 // by JG NMEA over TCP/IP for u-center communication
 char rxGPSBuf[510];        // by: JG ReceiveBuffer for Serial1 (GPS-Modul)
@@ -77,25 +76,15 @@ WiFiClient tcpNMEAclient;
 
 // von main.cpp uebernommen
 //static IP
-IPAddress myip(192, 168, 2, 79);  // Roofcontrol module
+IPAddress myip(192, 168, 2, 79);  // own WIFI-Client adress
 IPAddress gwip(192, 168, 2, 1);   // Gateway & Accesspoint IP
 IPAddress mask(255, 255, 255, 0);
 IPAddress myDNS(8, 8, 8, 8);      //optional
 
 
-// by JG wird nur bei mir icht benoetigt (UDP ?)
-//unsigned int portMy = 5544;       //this is port of this module: Autosteer = 5577 IMU = 5566 GPS = 
-//unsigned int portAOG = 8888;      // port to listen for AOG
-//unsigned int portMyNtrip = 2233;
-// von Cor2Code übernommen
-//IP address to send UDP data to:
-//IPAddress ipDestination(192, 168, 2, 255);
-//unsigned int portDestination = 9999;  // Port of AOG that listens
-
 WiFiServer server(80);
 
 // by JG von Core1Code übernommen
- 
 //###########################################################################################
 void setAuthorization(const char * user, const char * password)
 {
@@ -106,7 +95,6 @@ void setAuthorization(const char * user, const char * password)
         _base64Authorization = base64::encode(auth);
     }
 }
-
 
 //###########################################################################################
 bool connectCaster()
@@ -214,7 +202,8 @@ bool startStream()
 {
  
  // Reconnect for getting RTCM Stream
- if (!connectCaster()){  //reconnect for stream
+ if (!connectCaster())
+ {  //reconnect for stream
    DBG("NTRIP Host connection failed\n");
    DBG("Can not connect to NTRIP Hoster\n");
    DBG("Check Network Name and Port\n");
