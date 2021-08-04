@@ -40,7 +40,7 @@ extern AsyncUDP udpNtrip;
 
 // by JG NMEA over TCP/IP for u-center communication
 extern char rxGPSBuf[510];        // by: JG ReceiveBuffer for Serial1 (GPS-Modul)
-extern WiFiServer tcpNMEAserver;
+//extern WiFiServer tcpNMEAserver; evt. in Zukunft als direkter Zugriff zu u-blox Modul über TCP/IP
 extern WiFiClient tcpNMEAclient;
 
 

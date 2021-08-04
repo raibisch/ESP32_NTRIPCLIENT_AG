@@ -111,6 +111,7 @@ void Serial_GPS_TXD()
   }
   else if (!b_NMEA_connected)
   {
+    /*
      if (tcpNMEAserver.hasClient())
      {
       b_NMEA_connected = true;
@@ -124,6 +125,7 @@ void Serial_GPS_TXD()
       //tcpNMEAclient.setNoDelay(true);
       DBG("*** tcpNMEA connected...");
      }
+     */
   }
   else
 #endif

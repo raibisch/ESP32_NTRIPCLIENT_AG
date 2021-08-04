@@ -27,9 +27,6 @@ char sendNmea[3][10] = {"OFF", "USB-Ser.", "Bluetooth"};
 // Radiobutton Select if NTRIP Client is enabled. (Off to use only NMEA Transmission to AOG)
 char ntripOn_type[3][9] = {"OFF", "WiFi-TCP", "AOG-UDP"};
 
-// by JG nicht benoetigt
-//char AHRS_tab[2][21] = {"IMU BNO055", "MMA8452 Inclinometer"};
-
 // by JG
 char gcp_WG84_32N[13] = {"WGS84 UTM32N"};
 //---------------------------------------------------------------------
@@ -58,7 +55,7 @@ char imuBuffer[20];
 int intern_count = 0;
 
 //---------------------------------------------------------------------
-String _userAgent = "NTRIP CoffeetracNTRIPClient";
+String _userAgent = "DLG NTRIPClient";
 
 // Allgemeine Variablen
 String _base64Authorization;
@@ -71,13 +68,14 @@ WiFiClient ntripCl;
 
 // by JG NMEA over TCP/IP for u-center communication
 char rxGPSBuf[510];        // by: JG ReceiveBuffer for Serial1 (GPS-Modul)
-WiFiServer tcpNMEAserver(81);
+//WiFiServer tcpNMEAserver(81);
 WiFiClient tcpNMEAclient;
 
 // von main.cpp uebernommen
 //static IP
 IPAddress myip(192, 168, 2, 79);  // own WIFI-Client adress
-IPAddress gwip(192, 168, 2, 1);   // Gateway & Accesspoint IP
+IPAddress apip(192, 168, 4,  1);      // AP- adress
+IPAddress gwip(192, 168, 2,  1);   // Gateway & Accesspoint IP
 IPAddress mask(255, 255, 255, 0);
 IPAddress myDNS(8, 8, 8, 8);      //optional
 
@@ -487,6 +485,35 @@ void Pick_Text(char * tx_ziel, char  * tx_quelle, int max_ziel) {
 }
 
 //---------------------------------------------------------------------
+void WiFi_Start_AP()
+{
+  WiFi.mode(WIFI_AP); // Accesspoint
+  WiFi.softAP(ssid_ap);
+  while (!SYSTEM_EVENT_AP_START) // wait until AP has started
+  {
+    delay(100);
+    DBG(".");
+  }
+
+  WiFi.softAPConfig(apip, apip, mask); // set fix IP for AP
+  IPAddress getmyIP = WiFi.softAPIP();
+
+  server.begin();
+  // tcpNMEAserver.begin();  by JG
+  my_WiFi_Mode = WIFI_AP;
+  DBG("Accesspoint started - Name : ");
+  DBG(ssid_ap);
+  DBG(" IP address: ");
+  DBG(getmyIP, 1);
+  display_clear();
+  display_text(0, "WiFI connected to:");
+  display_text(1, ssid_ap);
+  display_text(2, WiFi.localIP().toString());
+  display_display();
+  wifi_connected = true;
+}
+
+//---------------------------------------------------------------------
 void WiFi_Start_STA() 
 {
   unsigned long timeout;
@@ -503,10 +530,10 @@ void WiFi_Start_STA()
   
   WiFi.begin(NtripSettings.ssid, NtripSettings.password);
   //timeout = millis() + (NtripSettings.timeoutRouter * 1000);
-  timeout = millis() + (4 * 1000);
+  timeout = millis() + (5 * 1000); // 4 sec.
   while (WiFi.status() != WL_CONNECTED && millis() < timeout) 
   {
-    delay(200);
+    delay(400);
     DBG(".");
     //WIFI LED blink in double time while connecting
     
@@ -519,7 +546,8 @@ void WiFi_Start_STA()
            //digitalWrite(LED_PIN_WIFI, HIGH);
           }
     }
-    if (LED_WIFI_ON) {
+    if (LED_WIFI_ON) 
+    {
       if (millis() > (LED_WIFI_time + (LED_WIFI_pulse >> 2))) {
         LED_WIFI_time = millis();
         LED_WIFI_ON = false;
@@ -536,13 +564,15 @@ void WiFi_Start_STA()
   if (WiFi.status() == WL_CONNECTED) 
   {
     server.begin();
-    tcpNMEAserver.begin(); // by JG
+    //tcpNMEAserver.begin(); // by JG z.Z. nicht genutzt
     my_WiFi_Mode = WIFI_STA;
     display_clear();
     display_text(0,"WiFI connected to:");
-    display_text(1,WiFi.localIP().toString());
+    display_text(1, NtripSettings.ssid);
+    display_text(2,WiFi.localIP().toString());
     display_display();
     DBG("WiFi Client connected to : ");
+   
     DBG(NtripSettings.ssid, 1);
     DBG("Connected IP - Address : ");
     DBG( WiFi.localIP(), 1);
@@ -552,36 +582,17 @@ void WiFi_Start_STA()
   {
     //WiFi.mode(WIFI_OFF);
     DBG("WLAN-Client-Connection failed\n");
-    ESP.restart(); // by JG
-    wifi_connected = false;
+    
+    //ESP.restart(); // by JG
+    //wifi_connected = false;
+
+    DBG("..try to create local AP 'NTRIP'");
+    WiFi_Start_AP();
+    wifi_connected = true;
   }
   
 }
 
-
-//---------------------------------------------------------------------
-void WiFi_Start_AP() 
-{
-  WiFi.mode(WIFI_AP);   // Accesspoint
-  WiFi.softAP(ssid_ap, password_ap);
-  while (!SYSTEM_EVENT_AP_START) // wait until AP has started
-   {
-    delay(100);
-    DBG(".");
-   }
-   
-  WiFi.softAPConfig(myip, myip, mask);  // set fix IP for AP
-  IPAddress getmyIP = WiFi.softAPIP();
-    
-  server.begin();
-  tcpNMEAserver.begin(); // by JG
-  my_WiFi_Mode = WIFI_AP;
-  DBG("Accesspoint started - Name : ");
-  DBG(ssid_ap);
-  DBG( " IP address: ");
-  DBG(getmyIP, 1);
-  wifi_connected = true;
-}
 
 //------------------------------------------------------------------------------------------
 // Subs --------------------------------------

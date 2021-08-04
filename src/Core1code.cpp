@@ -8,7 +8,7 @@
 #include "Display.h"
 #include "SDCard.h"
 
- unsigned long lTime =0;
+unsigned long lTime =0;
 
 void Core1code( void * pvParameters )
 {
