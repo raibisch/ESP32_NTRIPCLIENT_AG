@@ -1,4 +1,3 @@
-
 //Core1:  NTRIP Client Code
 #include <Arduino.h>
 #include <base64.h>
