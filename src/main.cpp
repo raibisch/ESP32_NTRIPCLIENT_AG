@@ -365,8 +365,8 @@ void loop()
        {
         //display_clear();
         String fix = "--  ";
-        Serial.print("Fix-Mode:");
-        Serial.println(gps.cFixMode());
+        //Serial.print("Fix-Mode:");
+        //Serial.println(gps.cFixMode());
         if (gps.cFixMode() == 1)
         {
          fix = "GPS   ";
@@ -391,8 +391,8 @@ void loop()
         }
          
         display_text(0, "SAT:"+ String(gps.satellites.value()) + " FIX:"+ fix, txtcolor); 
-        display_text(1, "LA :"+ String(gps.location.lat(),7)); 
-        display_text(2, "LO : "+ String(gps.location.lng(),7));
+        display_text(1, "LA:"+ String(gps.location.lat(),7)); 
+        display_text(2, "LO: "+ String(gps.location.lng(),7));
        
         
         //char TimeString[10];
