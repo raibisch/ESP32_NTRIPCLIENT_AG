@@ -5,20 +5,6 @@
 
 
 #ifdef USE_WEMOSBOARD
-#include <SSD1306.h> // alias for `#include "SSD1306Wire.h"'
-#endif
-
-#ifdef USE_M5STICKC
-#include <M5StickC.h>
-#endif
-
-#ifdef USE_M5STACK
-#include <M5Stack.h>                                         /* Include M5 Stack library */
-#endif
-
-
-
-#ifdef USE_WEMOSBOARD
 static SSD1306  oled(0x3c, 5, 4);
 #endif
 
@@ -27,6 +13,11 @@ void display_clear()
 {
 #ifdef USE_WEMOSBOARD
   oled.clear();
+#endif
+
+#ifdef USE_M5STICKC
+ M5.begin();
+ M5.Lcd.fillScreen(TFT_BLACK);
 #endif
 
 #ifdef USE_M5STACK
@@ -42,6 +33,16 @@ void display_init()
   oled.flipScreenVertically();
   oled.setFont(ArialMT_Plain_16);
   oled.setTextAlignment(TEXT_ALIGN_LEFT);
+#endif
+
+#ifdef USE_M5STICKC  
+  M5.Lcd.setRotation(3);
+  M5.Lcd.fillScreen(TFT_BLACK);
+  //M5.Lcd.setBrightness(250); /* Set initial LCD brightness */
+  M5.Lcd.println("init ok");
+  M5.update();
+  delay(100);
+  M5.Lcd.fillScreen(TFT_BLACK); 
 #endif
 
 #ifdef USE_M5STACK
@@ -61,6 +62,17 @@ void display_text(byte line_nr, String s, uint32_t color)
   oled.drawString(0, line_nr*16, s);
   //oled.display();
 #endif
+
+
+#ifdef USE_M5STICKC
+    M5.Lcd.fillRect(0, line_nr*17, 128, 17, TFT_BLACK);
+    M5.Lcd.setCursor(1, line_nr*17+5);
+    delay(1);
+    M5.Lcd.setTextColor(color);
+    M5.Lcd.print(s);
+    delay(1);
+#endif
+
 #ifdef USE_M5STACK 
     M5.Lcd.fillRect(0, line_nr*33, 320, 33, TFT_BLACK);
     M5.Lcd.setCursor(5, line_nr*33+5);

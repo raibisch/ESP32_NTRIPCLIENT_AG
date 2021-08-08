@@ -5,7 +5,6 @@
 
 #include "uti_dbg.h"
 #include "Network_AOG.h"
-#include "TinyGPS++.h"
 #include "Display.h"
 #include "SDCard.h"
 
@@ -185,8 +184,13 @@ void Core2code( void * pvParameters )
 
  // by JG
  // LINUX verbindung
- // sudo rfcomm connect /dev/rfcomm0 30:AE:A4:73:83:06 1 &
-//  COM36 ist auf rfcomm0 gelinkt
+ // M5Stack
+ // sudo rfcomm connect /dev/rfcomm0 30:AE:A4:73:83:06 1
+
+ // M5Stick-C
+ // sudo rfcomm connect /dev/rfcomm0 FC:F5:C4:30:E6:7E 1
+ 
+ //  COM36 ist auf rfcomm0 gelinkt
   
  #ifdef USE_BLUETOOTH
      if(!SerialBT.begin("NTRIP"))

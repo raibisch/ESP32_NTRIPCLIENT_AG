@@ -8,13 +8,8 @@
 #include <SSD1306.h> // alias for `#include "SSD1306Wire.h"'
 #endif
 
-#ifdef USE_M5STICKC
-#include <M5StickC.h>
-#endif
 
-#ifdef USE_M5STACK
-#include <M5Stack.h>                                         /* Include M5 Stack library */
-#endif
+#ifdef USE_SDCARD
 
 #include <SD_MMC.h>
 
@@ -99,3 +94,5 @@ bool sd_writefile(fs::FS &fs, const char * path, String s){
     file.close();
     return true;
 }
+
+#endif

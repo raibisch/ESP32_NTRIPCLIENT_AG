@@ -5,7 +5,6 @@
 #include <WiFi.h>
 #include <base64.h>
 #include <BluetoothSerial.h>
-#include <TinyGPS++.h>
 
 #include "Network_AOG.h"
 #include "util_eeprom.h"
@@ -311,12 +310,19 @@ void setup()
   wifi_connected = false;
 
   // Setup the button with an internal pull-up
+#ifdef USE_M5STACK
   pinMode(BUTTON_A_PIN, INPUT_PULLUP);
   pinMode(BUTTON_B_PIN, INPUT_PULLUP);
   pinMode(BUTTON_C_PIN, INPUT_PULLUP);
+#endif
+
+ #ifdef USE_M5STICKC
+  pinMode(BUTTON_A_PIN, INPUT_PULLUP);
+  pinMode(BUTTON_B_PIN, INPUT_PULLUP);
+#endif
   
   delay(100);
-  //sd_init();
+
   Serial.println("---- GCP-Data from EEPROM ----");
   for (int i=0; i<10; i++)
   {
@@ -359,24 +365,26 @@ void loop()
        {
         //display_clear();
         String fix = "--  ";
-        if (gps.getFixStatus()==1)
+        Serial.print("Fix-Mode:");
+        Serial.println(gps.cFixMode());
+        if (gps.cFixMode() == 1)
         {
          fix = "GPS   ";
          txtcolor = TFT_ORANGE;
         }
         else
-        if (gps.getFixStatus()==2)
+        if (gps.cFixMode()==2)
         {
          fix = "DGPS ";
          txtcolor = TFT_YELLOW;
         }
         else
-        if (gps.getFixStatus()==4)
+        if (gps.cFixMode()==4)
         {
          fix = "RTK  ";
          txtcolor = TFT_GREEN;
         }
-        if (gps.getFixStatus()==5)
+        if (gps.cFixMode()==5)
         {
          fix = "FLOAT"; 
          txtcolor = TFT_CYAN;
@@ -412,11 +420,15 @@ void loop()
          display_text(6,"RESET GCP00 NTRIP");
         b_first_run = false;
         }
+
+     #if defined(USE_M5STACK) || defined(USE_M5STICKC)
       M5.BtnA.read();
       delay(1);
       M5.BtnB.read();
       delay(1);
+    #ifdef USE_M5STACK
       M5.BtnC.read();
+    #endif
       delay(1);
       if (M5.BtnA.wasPressed())
       {
@@ -475,6 +487,7 @@ void loop()
          Serial.println(NtripSettings.gcp[ui_GCP_count-1]);
          EEprom_write_all();
       }
+    #ifdef USE_M5STACK
       else
       if (M5.BtnC.wasPressed())
       {
@@ -493,9 +506,11 @@ void loop()
         delay(500);
         EEprom_write_all();
       }
+      #endif
      }
     }
     delay(10);
+    #endif
     
 #endif
 }

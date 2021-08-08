@@ -7,19 +7,33 @@
 
 //#define USE_ACCEL  // by JG keine IMU
 
-// by JG Displays 
+// mit Display
 #define USE_DISPLAY
+
+// Boardauswahl
 //#define USE_WEMOSBOARD // OLED Display auf Wemos Board
-#define USE_M5STACK
-// IO pins --------------------------------
+#define USE_M5STICKC     // M5 Stick-C
+//#define USE_M5STACK    // M5 Stack Core
 
-
-// by JG ACHTUNG gilt nur für Testaufbau auf Wemos-Board ... muss noch angepasst werden
+// by JG ACHTUNG gilt nur für Testaufbau auf Wemos-Board 
 #ifdef USE_WEMOSBOARD
+#ifdef USE_DISPLAY
+ #include <SSD1306.h> // alias for `#include "SSD1306Wire.h"'
+#endif 
 #define RX1     14
 #define TX1     12
+define  BAUDGPS 9600
+#define SERVER_HOSTNAME "GNSSM8"
 #endif
 
+// M5 Stick mit ublox M8 (ohne Backup-Bat daher immer 9600Bd)
+#ifdef USE_M5STICKC
+#include <M5StickC.h>
+#define RX1 36
+#define TX1 26
+#define BAUDGPS 9600
+#define SERVER_HOSTNAME "GNSSM8"
+#endif
 
 // M5Stack Core (ist eigentlich auch Juergen bis auf das F9P-Modul)
 #ifdef USE_M5STACK
@@ -37,7 +51,7 @@
 #endif
 
 #include <BluetoothSerial.h>
-#include <TinyGPS++.h>
+#include <TinyGPSxx.h>
 
 
 
@@ -94,19 +108,21 @@ extern unsigned long refreshDisplay;
 
 extern char NtripRunState;
 
+#include "credential.sec"
+
 struct Storage
 {
   
-  char ssid[24]        = "SMC4";          // WiFi network Client name
-  char password[24]    = "###ud361309$$$";      // WiFi network password
+  char ssid[24]        = WIFI_ssid;          // WiFi network Client name
+  char password[24]    = WIFI_pass;      // WiFi network password
   unsigned long timeoutRouter = 65;           // Time (seconds) to wait for WIFI access, after that own Access Point starts 
 
   // Ntrip Caster Data
-  char host[40]        = "160.44.207.225";    // Server IP
+  char host[40]        = NTRIP_host;    // Server IP
   int  port            = 2102;                // Server Port
   char mountpoint[40]  = "agrar_2G";   // Mountpoint
-  char ntripUser[40]   = "LW_DLG";     // Username
-  char ntripPassword[40]= "JueGo64823";    // Password
+  char ntripUser[40]    = NTRIP_user;     // Username
+  char ntripPassword[40] = NTRIP_pass;    // Password
 
   byte sendGGAsentence = 1; // 0 = No Sentence will be sended
                             // 1 = fixed Sentence from GGAsentence below will be sended
