@@ -485,10 +485,13 @@ void Pick_Text(char * tx_ziel, char  * tx_quelle, int max_ziel) {
 }
 
 //---------------------------------------------------------------------
+// only if no existing connection to Wifi Acesspoint is possible: 
+// start ESP32 in AP-Mode with SSID "NTRIP"
+// --------------------------------------------------------------------
 void WiFi_Start_AP()
 {
   WiFi.mode(WIFI_AP); // Accesspoint
-  WiFi.softAP(ssid_ap);
+  WiFi.softAP(ssid_ap); 
   while (!SYSTEM_EVENT_AP_START) // wait until AP has started
   {
     delay(100);
@@ -508,11 +511,18 @@ void WiFi_Start_AP()
   display_clear();
   display_text(0, "WiFI connected to:");
   display_text(1, ssid_ap);
-  display_text(2, WiFi.localIP().toString());
+  display_text(2, getmyIP.toString());
   display_display();
   wifi_connected = true;
+  delay(2000);
 }
 
+
+// for use of stataic IP-Addr.
+//define USE_STATIC_IP_ADR 
+//---------------------------------------------------------------------
+// we need connection to internet for NTRIP via external
+// Acces-Point or Mobil-Phone in theathering mode
 //---------------------------------------------------------------------
 void WiFi_Start() 
 {
@@ -522,12 +532,14 @@ void WiFi_Start()
   delay(100);
   WiFi.mode(WIFI_STA);   //  Workstation
   
-  // für statische IP:
+#ifdef USE_STATIC_IP_ADR
   if (!WiFi.config(myip, gwip, mask, myDNS)) 
   {
     DBG("STA Failed to configure\n");
   }
-  
+#endif
+
+
   WiFi.begin(NtripSettings.ssid, NtripSettings.password);
   //timeout = millis() + (NtripSettings.timeoutRouter * 1000);
   timeout = millis() + (5 * 1000); // 4 sec.
@@ -566,15 +578,16 @@ void WiFi_Start()
     server.begin();
     //tcpNMEAserver.begin(); // by JG z.Z. nicht genutzt
     my_WiFi_Mode = WIFI_STA;
+    IPAddress getmyIP = WiFi.localIP();
     display_clear();
     display_text(0,"WiFI connected to:");
     display_text(1, NtripSettings.ssid);
-    display_text(2,WiFi.localIP().toString());
+    display_text(5,"IP:" + getmyIP.toString());
     display_display();
     DBG("WiFi Client connected to : ");
    
     DBG(NtripSettings.ssid, 1);
-    DBG("Connected IP - Address : ");
+    DBG("\nConnected IP - Address : ");
     DBG( WiFi.localIP(), 1);
     wifi_connected = true;
   } 
@@ -585,10 +598,12 @@ void WiFi_Start()
     
     //ESP.restart(); // by JG
     //wifi_connected = false;
-
-    DBG("\n..try to create local AP 'NTRIP'");
+   
+    DBG("\n..no connection to access-point: try to create local AP 'NTRIP'");
     WiFi_Start_AP();
     wifi_connected = true;
+     IPAddress getmyIP = WiFi.softAPIP();
+    display_text(5,"NTRIP:" + getmyIP.toString(),TFT_ORANGE);
     delay(1000);
   }
   

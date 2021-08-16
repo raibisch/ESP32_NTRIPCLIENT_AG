@@ -28,7 +28,7 @@ TaskHandle_t Core2;
 //### Just Default values ##################################################################################
 
 // BY JG : Juergen Goldmann 30.6.2021 : 
-//Umbau des Codes für PlatformIO
+// Umbau des Codes für PlatformIO
 // 
 // Idee für neuen Webserver: https://techtutorialsx.com/2018/08/24/esp32-web-server-serving-html-from-file-system/
 
@@ -415,10 +415,10 @@ void loop()
         }
         display_text(4, scon);
         //display_display(); 
-         if (b_first_run && wifi_connected)
+        if (b_first_run && wifi_connected)
         {
-         display_text(6,"RESET GCP00 NTRIP");
-        b_first_run = false;
+         display_text(6,"RESET GCP00 NTRIP"); // Keypad Text
+         b_first_run = false;
         }
 
      #if defined(USE_M5STACK) || defined(USE_M5STICKC)

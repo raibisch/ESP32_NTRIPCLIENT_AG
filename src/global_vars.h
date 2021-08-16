@@ -12,10 +12,10 @@
 
 // Boardauswahl
 //#define USE_WEMOSBOARD // OLED Display auf Wemos Board
-#define USE_M5STICKC     // M5 Stick-C
-//#define USE_M5STACK    // M5 Stack Core
+//#define USE_M5STICKC     // M5 Stick-C
+#define USE_M5STACK    // M5 Stack Core
 
-// by JG ACHTUNG gilt nur für Testaufbau auf Wemos-Board 
+// by JG: ACHTUNG gilt nur für Testaufbau auf Wemos-Board 
 #ifdef USE_WEMOSBOARD
 #ifdef USE_DISPLAY
  #include <SSD1306.h> // alias for `#include "SSD1306Wire.h"'
@@ -118,11 +118,11 @@ struct Storage
   unsigned long timeoutRouter = 65;           // Time (seconds) to wait for WIFI access, after that own Access Point starts 
 
   // Ntrip Caster Data
-  char host[40]        = NTRIP_host;    // Server IP
-  int  port            = 2102;                // Server Port
+  char host[40]        = NTRIP_host;   // Server IP
+  int  port            = 2102;         // Server Port
   char mountpoint[40]  = "agrar_2G";   // Mountpoint
-  char ntripUser[40]    = NTRIP_user;     // Username
-  char ntripPassword[40] = NTRIP_pass;    // Password
+  char ntripUser[40]    = NTRIP_user;  // Username
+  char ntripPassword[40] = NTRIP_pass; // Password
 
   byte sendGGAsentence = 1; // 0 = No Sentence will be sended
                             // 1 = fixed Sentence from GGAsentence below will be sended
