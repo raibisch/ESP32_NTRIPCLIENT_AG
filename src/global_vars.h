@@ -11,9 +11,9 @@
 #define USE_DISPLAY
 
 // Boardauswahl
-//#define USE_WEMOSBOARD // OLED Display auf Wemos Board
+#define USE_WEMOSBOARD // OLED Display auf Wemos Board
 //#define USE_M5STICKC     // M5 Stick-C
-#define USE_M5STACK    // M5 Stack Core
+//#define USE_M5STACK    // M5 Stack Core
 
 // by JG: ACHTUNG gilt nur für Testaufbau auf Wemos-Board 
 #ifdef USE_WEMOSBOARD
@@ -22,8 +22,8 @@
 #endif 
 #define RX1     14
 #define TX1     12
-define  BAUDGPS 9600
-#define SERVER_HOSTNAME "GNSSM8"
+#define  BAUDGPS 9600
+#define SERVER_HOSTNAME "GNSSBT220"
 #endif
 
 // M5 Stick mit ublox M8 (ohne Backup-Bat daher immer 9600Bd)
