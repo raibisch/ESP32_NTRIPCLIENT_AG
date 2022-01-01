@@ -6,6 +6,11 @@ Example NTRIP client written with Arduino IDE for an espressif ESP32. (C) 2019- 
 Enhanced by Matthias H.(MTZ) with Bluetooth, IMU (BNO055) and Roll Sensor MMA8452
 Source: https://github.com/Coffeetrac/AG_NTRIP_ESP
 
-Änderungen gegünüber der o.g. Version:
-- Neue Strukturierung der Source Dateien
-- Umbau und Erweiterung für die Erzeugung und Speicherung von UTM Daten für Opendronemap (ODM) Ground-Control-Poinsts (GCP)
+Changes to original version
+- change: complete neu source file structure
+- change: forward serial NMEA aata to Bluetooth-serial
+- remove: IMU part of original code
+- add:  : lon/lat to UMT-Converter
+- add:  : generate GCP (Ground-Control-Points) for ODM (opendronemap) https://docs.opendronemap.org/gcp/
+
+
